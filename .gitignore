@@ -1,0 +1,4 @@
+# secrets and generated client configs stay local
+secrets.local.json
+client-configs/
+*.local.*

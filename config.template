@@ -1,0 +1,86 @@
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "udp",
+        "tag": "remote-dns",
+        "server": "8.8.8.8"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "type": "vless",
+      "tag": "vless-reality",
+      "listen": "::",
+      "listen_port": 30080,
+      "users": [
+        {
+          "uuid": "__VLESS_UUID__"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "handshake": {
+            "server": "__REALITY_HANDSHAKE_SERVER__",
+            "server_port": 443
+          },
+          "private_key": "__REALITY_PRIVATE_KEY__",
+          "short_id": [
+            "__REALITY_SHORT_ID__"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "hy2",
+      "listen": "::",
+      "listen_port": 30080,
+      "obfs": {
+        "type": "salamander",
+        "password": "__HY2_OBFS_PASSWORD__"
+      },
+      "users": [
+        {
+          "password": "__HY2_PASSWORD__"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "certificate_path": "/var/lib/sing-box/hy2-cert.pem",
+        "key_path": "/var/lib/sing-box/hy2-key.pem"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "vless-ws",
+      "listen": "::",
+      "listen_port": 30081,
+      "users": [
+        {
+          "uuid": "__VLESS_UUID__"
+        }
+      ],
+      "transport": {
+        "type": "ws",
+        "path": "__WS_PATH__"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "out"
+    }
+  ],
+  "route": {
+    "final": "out"
+  }
+}

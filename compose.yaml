@@ -1,0 +1,36 @@
+services:
+  proxy:
+    build: .
+    ports:
+      - "30080:30080/tcp"
+      - "30080:30080/udp"
+    expose:
+      - "30081"
+    volumes:
+      - proxy-data:/var/lib/sing-box
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.35"
+          memory: 700M
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+    environment:
+      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+    depends_on:
+      - proxy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.15"
+          memory: 300M
+
+volumes:
+  proxy-data:
